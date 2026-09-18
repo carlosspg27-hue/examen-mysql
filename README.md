@@ -89,4 +89,9 @@ me enfoque en solo estas preguntas:
 
 
 ```sql
+<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/f23de57d-230f-4f03-aa6c-77e3a6c5c378" />
+<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/c204cfa2-f865-404e-bffc-0e91f54c2204" />
+<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/25de3eba-ec8d-4d74-855e-8bd79eaaf2b1" />
+<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/dc69a8e2-9cc8-4f06-87db-93652bdefb69" />
+<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/36c226c4-8688-4648-87ae-0b4bc0eda86b" />
 
