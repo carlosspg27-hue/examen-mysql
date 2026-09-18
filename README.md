@@ -34,62 +34,6 @@ Base de Datos: MySQL para la gestión de la información.
 Lenguaje de Consulta: SQL para realizar las consultas necesarias y gestionar los datos.
 Herramientas de Diseño: Herramientas de modelado de bases de datos (por ejemplo, MySQL Workbench) para visualizar y diseñar la estructura de la base de datos.
 
-me enfoque en solo estas preguntas:
-
-1. **Número de pacientes atendidos por cada médico**
-
-
-
-```sql
-
-
-
-```
-
-
-
-2. **Total de días de vacaciones planificadas y disfrutadas por cada empleado**
-
-
-
-```sql
-
-
-
-```
-
-
-
-3. **Médicos con mayor cantidad de horas de consulta en la semana**
-
-
-
-```sql
-
-
-
-```
-
-
-
-4.  **Número de sustituciones realizadas por cada médico sustituto**
-
-
-
-```sql
-
-
-
-```
-
-
-
-5.  **Número de médicos que están actualmente en sustitución**
-
-
-
-```sql
-
 
 
 <img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/f23de57d-230f-4f03-aa6c-77e3a6c5c378" />
