@@ -66,6 +66,128 @@ Herramientas de Diseño: Herramientas de modelado de bases de datos (por ejemplo
 
 <img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/1b81d734-1012-4aea-8cea-0d0f93079689" />
 
+se hicieron exactamente 1o consultas que fueron:
+
+# Consultas
+
+
+
+1. **Número de pacientes atendidos por cada médico**
+
+
+
+```sql
+
+
+
+```
+
+
+
+2. **Total de días de vacaciones planificadas y disfrutadas por cada empleado**
+
+
+
+```sql
+
+
+
+```
+
+
+
+3. **Médicos con mayor cantidad de horas de consulta en la semana**
+
+
+
+```sql
+
+
+
+```
+
+
+
+4.  **Número de sustituciones realizadas por cada médico sustituto**
+
+
+
+```sql
+
+
+
+```
+
+
+
+5.  **Número de médicos que están actualmente en sustitución**
+
+
+
+```sql
+
+
+
+```
+
+
+
+6. **Horas totales de consulta por médico por día de la semana**
+
+
+
+```sql
+
+
+
+```
+
+
+
+7.  **Médico con mayor cantidad de pacientes asignados**
+
+
+
+```sql
+
+
+
+```
+
+
+
+8. **Empleados con más de 10 días de vacaciones disfrutadas**
+
+
+
+```sql
+
+
+
+```
+
+
+
+9.  **Médicos que actualmente están realizando una sustitución**
+
+
+
+```sql
+
+
+
+```
+
+
+
+10.  **Promedio de horas de consulta por médico por día de la semana**
+
+
+
+```sql
+
+
+
 
 
 
