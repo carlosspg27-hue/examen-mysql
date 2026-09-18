@@ -46,7 +46,4 @@ Herramientas de Diseño: Herramientas de modelado de bases de datos (por ejemplo
 
 <img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/36c226c4-8688-4648-87ae-0b4bc0eda86b" />
 
-<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/f975af09-0464-49ee-8476-a3a17b1fa2ba" />
-
-
 
