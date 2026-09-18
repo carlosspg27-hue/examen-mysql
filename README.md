@@ -46,3 +46,15 @@ Herramientas de Diseño: Herramientas de modelado de bases de datos (por ejemplo
 
 <img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/36c226c4-8688-4648-87ae-0b4bc0eda86b" />
 
+<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/f975af09-0464-49ee-8476-a3a17b1fa2ba" />
+
+<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/1f902636-6b4b-4623-83e0-6ce1a5122498" />
+
+<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/26d9e0d5-a7c6-4025-93f4-461a38ea73b3" />
+
+<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/f18902ef-902a-4985-957b-015411311b73" />
+
+<img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/1e928314-a9f1-48d4-a135-04b1debb13d2" />
+
+
+
