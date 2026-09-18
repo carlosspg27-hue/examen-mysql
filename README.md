@@ -89,5 +89,4 @@ me enfoque en solo estas preguntas:
 
 
 ```sql
-<img width="1234" height="736" alt="image" src="https://github.com/user-attachments/assets/aaa822d9-0c7e-416f-b6eb-b40688e93df2" />
 
