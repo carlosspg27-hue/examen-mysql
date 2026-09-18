@@ -1,1 +1,158 @@
+DROP DATABASE IF EXISTS medisistema;
+CREATE DATABASE medisistema
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 
+USE medisistema;
+
+CREATE TABLE medico (
+    id_medico       INT AUTO_INCREMENT PRIMARY KEY,
+    dni             VARCHAR(15)  NOT NULL UNIQUE,
+    nombre          VARCHAR(60)  NOT NULL,
+    apellidos       VARCHAR(80)  NOT NULL,
+    telefono        VARCHAR(20),
+    email           VARCHAR(100) UNIQUE,
+    fecha_nacimiento DATE,
+    fecha_alta      DATE         NOT NULL,
+    tipo            ENUM('TITULAR','INTERINO','SUSTITUTO') NOT NULL,
+    especialidad    VARCHAR(80),
+    num_colegiado   VARCHAR(30)  UNIQUE,
+    activo          BOOLEAN      NOT NULL DEFAULT TRUE,
+
+    CONSTRAINT chk_medico_email CHECK (email IS NULL OR email LIKE '%@%.%')
+) ENGINE=InnoDB;
+
+CREATE TABLE empleado (
+    id_empleado     INT AUTO_INCREMENT PRIMARY KEY,
+    dni             VARCHAR(15)  NOT NULL UNIQUE,
+    nombre          VARCHAR(60)  NOT NULL,
+    apellidos       VARCHAR(80)  NOT NULL,
+    telefono        VARCHAR(20),
+    email           VARCHAR(100) UNIQUE,
+    fecha_nacimiento DATE,
+    fecha_alta      DATE         NOT NULL,
+    puesto          ENUM('ATS','AUXILIAR_ENFERMERIA','CELADOR','ADMINISTRATIVO') NOT NULL,
+    activo          BOOLEAN      NOT NULL DEFAULT TRUE,
+
+    CONSTRAINT chk_empleado_email CHECK (email IS NULL OR email LIKE '%@%.%')
+) ENGINE=InnoDB;
+
+CREATE TABLE paciente (
+    id_paciente     INT AUTO_INCREMENT PRIMARY KEY,
+    dni             VARCHAR(15)  NOT NULL UNIQUE,
+    nombre          VARCHAR(60)  NOT NULL,
+    apellidos       VARCHAR(80)  NOT NULL,
+    fecha_nacimiento DATE        NOT NULL,
+    telefono        VARCHAR(20),
+    direccion       VARCHAR(150),
+    num_historial   VARCHAR(30)  NOT NULL UNIQUE,
+    id_medico_asignado INT,
+    fecha_asignacion DATE,
+
+    CONSTRAINT fk_paciente_medico
+        FOREIGN KEY (id_medico_asignado)
+        REFERENCES medico(id_medico)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE horario (
+    id_horario      INT AUTO_INCREMENT PRIMARY KEY,
+    id_medico       INT NOT NULL,
+    dia_semana      ENUM('LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO','DOMINGO') NOT NULL,
+    hora_inicio     TIME NOT NULL,
+    hora_fin        TIME NOT NULL,
+    consulta        VARCHAR(20),
+
+    CONSTRAINT fk_horario_medico
+        FOREIGN KEY (id_medico)
+        REFERENCES medico(id_medico)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_horario_horas CHECK (hora_fin > hora_inicio),
+    CONSTRAINT uq_horario UNIQUE (id_medico, dia_semana, hora_inicio)
+) ENGINE=InnoDB;
+
+CREATE TABLE sustitucion (
+    id_sustitucion  INT AUTO_INCREMENT PRIMARY KEY,
+    id_medico_titular   INT NOT NULL,
+    id_medico_sustituto INT NOT NULL,
+    fecha_inicio    DATE NOT NULL,
+    fecha_fin       DATE NOT NULL,
+    motivo          VARCHAR(200),
+
+    CONSTRAINT fk_sust_titular
+        FOREIGN KEY (id_medico_titular)
+        REFERENCES medico(id_medico)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_sust_sustituto
+        FOREIGN KEY (id_medico_sustituto)
+        REFERENCES medico(id_medico)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_sust_fechas CHECK (fecha_fin >= fecha_inicio),
+    CONSTRAINT chk_sust_distintos CHECK (id_medico_titular <> id_medico_sustituto)
+) ENGINE=InnoDB;
+
+CREATE TABLE vacacion (
+    id_vacacion     INT AUTO_INCREMENT PRIMARY KEY,
+    id_medico       INT NULL,
+    id_empleado     INT NULL,
+    fecha_inicio    DATE NOT NULL,
+    fecha_fin       DATE NOT NULL,
+    estado          ENUM('PLANIFICADA','DISFRUTADA','CANCELADA') NOT NULL DEFAULT 'PLANIFICADA',
+    observaciones   VARCHAR(200),
+
+    CONSTRAINT fk_vac_medico
+        FOREIGN KEY (id_medico)
+        REFERENCES medico(id_medico)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_vac_empleado
+        FOREIGN KEY (id_empleado)
+        REFERENCES empleado(id_empleado)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_vac_fechas CHECK (fecha_fin >= fecha_inicio),
+    CONSTRAINT chk_vac_propietario CHECK (
+        (id_medico IS NOT NULL AND id_empleado IS NULL) OR
+        (id_medico IS NULL AND id_empleado IS NOT NULL)
+    )
+) ENGINE=InnoDB;
+
+CREATE TABLE asignacion (
+    id_asignacion   INT AUTO_INCREMENT PRIMARY KEY,
+    id_paciente     INT NOT NULL,
+    id_medico       INT NOT NULL,
+    fecha_inicio    DATE NOT NULL,
+    fecha_fin       DATE NULL,
+    activa          BOOLEAN NOT NULL DEFAULT TRUE,
+
+    CONSTRAINT fk_asig_paciente
+        FOREIGN KEY (id_paciente)
+        REFERENCES paciente(id_paciente)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_asig_medico
+        FOREIGN KEY (id_medico)
+        REFERENCES medico(id_medico)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_asig_fechas CHECK (fecha_fin IS NULL OR fecha_fin >= fecha_inicio)
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_medico_tipo       ON medico(tipo);
+CREATE INDEX idx_empleado_puesto   ON empleado(puesto);
+CREATE INDEX idx_paciente_medico   ON paciente(id_medico_asignado);
+CREATE INDEX idx_horario_medico    ON horario(id_medico);
+CREATE INDEX idx_sust_fechas       ON sustitucion(fecha_inicio, fecha_fin);
+CREATE INDEX idx_vac_fechas        ON vacacion(fecha_inicio, fecha_fin);
+CREATE INDEX idx_asig_paciente     ON asignacion(id_paciente, activa);
