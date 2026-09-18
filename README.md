@@ -66,7 +66,7 @@ Herramientas de Diseño: Herramientas de modelado de bases de datos (por ejemplo
 
 <img width="1335" height="758" alt="image" src="https://github.com/user-attachments/assets/1b81d734-1012-4aea-8cea-0d0f93079689" />
 
-se hicieron exactamente 1o consultas que fueron:
+se hicieron exactamente 10 consultas que fueron:
 
 # Consultas
 
