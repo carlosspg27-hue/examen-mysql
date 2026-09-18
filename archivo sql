@@ -18,7 +18,6 @@ CREATE TABLE medico (
     especialidad    VARCHAR(80),
     num_colegiado   VARCHAR(30)  UNIQUE,
     activo          BOOLEAN      NOT NULL DEFAULT TRUE,
-
     CONSTRAINT chk_medico_email CHECK (email IS NULL OR email LIKE '%@%.%')
 ) ENGINE=InnoDB;
 
@@ -33,7 +32,6 @@ CREATE TABLE empleado (
     fecha_alta      DATE         NOT NULL,
     puesto          ENUM('ATS','AUXILIAR_ENFERMERIA','CELADOR','ADMINISTRATIVO') NOT NULL,
     activo          BOOLEAN      NOT NULL DEFAULT TRUE,
-
     CONSTRAINT chk_empleado_email CHECK (email IS NULL OR email LIKE '%@%.%')
 ) ENGINE=InnoDB;
 
@@ -48,7 +46,6 @@ CREATE TABLE paciente (
     num_historial   VARCHAR(30)  NOT NULL UNIQUE,
     id_medico_asignado INT,
     fecha_asignacion DATE,
-
     CONSTRAINT fk_paciente_medico
         FOREIGN KEY (id_medico_asignado)
         REFERENCES medico(id_medico)
@@ -63,13 +60,11 @@ CREATE TABLE horario (
     hora_inicio     TIME NOT NULL,
     hora_fin        TIME NOT NULL,
     consulta        VARCHAR(20),
-
     CONSTRAINT fk_horario_medico
         FOREIGN KEY (id_medico)
         REFERENCES medico(id_medico)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-
     CONSTRAINT chk_horario_horas CHECK (hora_fin > hora_inicio),
     CONSTRAINT uq_horario UNIQUE (id_medico, dia_semana, hora_inicio)
 ) ENGINE=InnoDB;
@@ -94,8 +89,7 @@ CREATE TABLE sustitucion (
         ON UPDATE CASCADE
         ON DELETE CASCADE,
 
-    CONSTRAINT chk_sust_fechas CHECK (fecha_fin >= fecha_inicio),
-    CONSTRAINT chk_sust_distintos CHECK (id_medico_titular <> id_medico_sustituto)
+    CONSTRAINT chk_sust_fechas CHECK (fecha_fin >= fecha_inicio)
 ) ENGINE=InnoDB;
 
 CREATE TABLE vacacion (
@@ -119,11 +113,7 @@ CREATE TABLE vacacion (
         ON UPDATE CASCADE
         ON DELETE CASCADE,
 
-    CONSTRAINT chk_vac_fechas CHECK (fecha_fin >= fecha_inicio),
-    CONSTRAINT chk_vac_propietario CHECK (
-        (id_medico IS NOT NULL AND id_empleado IS NULL) OR
-        (id_medico IS NULL AND id_empleado IS NOT NULL)
-    )
+    CONSTRAINT chk_vac_fechas CHECK (fecha_fin >= fecha_inicio)
 ) ENGINE=InnoDB;
 
 CREATE TABLE asignacion (
@@ -133,19 +123,16 @@ CREATE TABLE asignacion (
     fecha_inicio    DATE NOT NULL,
     fecha_fin       DATE NULL,
     activa          BOOLEAN NOT NULL DEFAULT TRUE,
-
     CONSTRAINT fk_asig_paciente
         FOREIGN KEY (id_paciente)
         REFERENCES paciente(id_paciente)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-
     CONSTRAINT fk_asig_medico
         FOREIGN KEY (id_medico)
         REFERENCES medico(id_medico)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-
     CONSTRAINT chk_asig_fechas CHECK (fecha_fin IS NULL OR fecha_fin >= fecha_inicio)
 ) ENGINE=InnoDB;
 
@@ -156,3 +143,49 @@ CREATE INDEX idx_horario_medico    ON horario(id_medico);
 CREATE INDEX idx_sust_fechas       ON sustitucion(fecha_inicio, fecha_fin);
 CREATE INDEX idx_vac_fechas        ON vacacion(fecha_inicio, fecha_fin);
 CREATE INDEX idx_asig_paciente     ON asignacion(id_paciente, activa);
+
+DELIMITER //
+
+CREATE TRIGGER trg_sust_distintos_ins
+BEFORE INSERT ON sustitucion
+FOR EACH ROW
+BEGIN
+    IF NEW.id_medico_titular = NEW.id_medico_sustituto THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Un médico no puede sustituirse a sí mismo';
+    END IF;
+END //
+
+CREATE TRIGGER trg_sust_distintos_upd
+BEFORE UPDATE ON sustitucion
+FOR EACH ROW
+BEGIN
+    IF NEW.id_medico_titular = NEW.id_medico_sustituto THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Un médico no puede sustituirse a sí mismo';
+    END IF;
+END //
+
+CREATE TRIGGER trg_vac_propietario_ins
+BEFORE INSERT ON vacacion
+FOR EACH ROW
+BEGIN
+    IF (NEW.id_medico IS NOT NULL AND NEW.id_empleado IS NOT NULL)
+       OR (NEW.id_medico IS NULL AND NEW.id_empleado IS NULL) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La vacación debe pertenecer a un médico O a un empleado';
+    END IF;
+END //
+
+CREATE TRIGGER trg_vac_propietario_upd
+BEFORE UPDATE ON vacacion
+FOR EACH ROW
+BEGIN
+    IF (NEW.id_medico IS NOT NULL AND NEW.id_empleado IS NOT NULL)
+       OR (NEW.id_medico IS NULL AND NEW.id_empleado IS NULL) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La vacación debe pertenecer a un médico O a un empleado';
+    END IF;
+END //
+
+DELIMITER ;
